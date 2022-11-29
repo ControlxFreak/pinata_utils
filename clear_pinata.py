@@ -20,19 +20,20 @@ headers = {
     "pinata_secret_api_key": PINATA_SECRET_KEY,
 }
 
-while True:
-    # Get the next batch of pins
-    response = requests.request("GET", get_url, headers=headers, data=payload).json()
+def clear_pinata():
+    while True:
+        # Get the next batch of pins
+        response = requests.request("GET", get_url, headers=headers, data=payload).json()
 
-    # Delete them
-    for row in response["rows"]:
-        # Get the ID and IPFS hash
-        ipfs_uri = row["ipfs_pin_hash"]
-        name = row["metadata"]["name"]
-        print(f"Deleting {name} at URI {ipfs_uri}")
+        # Delete them
+        for row in response["rows"]:
+            # Get the ID and IPFS hash
+            ipfs_uri = row["ipfs_pin_hash"]
+            name = row["metadata"]["name"]
+            print(f"Deleting {name} at URI {ipfs_uri}")
 
-        # Construct a request to delete this URI
-        del_url = base_del_url.format(ipfs_uri)
+            # Construct a request to delete this URI
+            del_url = base_del_url.format(ipfs_uri)
 
-        response = requests.request("DELETE", del_url, headers=headers, data=payload)
-        print(response.text)
+            response = requests.request("DELETE", del_url, headers=headers, data=payload)
+            print(response.text)
